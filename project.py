@@ -1,55 +1,53 @@
-class Banking:
+class Bank:
 
-   
+    def __init__(self, initial_amount=0.00):
+        self.balance = initial_amount
 
-  
-       @property
-       def depositor(self):
-           
-               print("Deposite:")
-               Name = input("What is your name?")
-               Account_Number = input("Enter the Account Number:")
-               Account_Number = int(Account_Number)
-               Ifsc_code = input("Enter the ifsc code:")
-               Amount = input("Enter the amount:")
-               Amount = int(Amount)
-               print("Application Form:")
-               print(f"The Entered name is {Name}")
-               print(f"The Entered Account Number is {Account_Number}")
-               print(f"The Entered IFSC Code is {Ifsc_code}")
-               print(f"The Entered Amount is {Amount}")
-               print("Confirmation message:")
-               print(f"Amount is successfully debited in Account  number:{Account_Number}")
-    
-   
-       @property 
-       def transaction(self):
-           print("/n/n")
-           print("The transaction:")
-           print("Enter the card")
-           user = input("choose the account type")
-           type = ['savings account' , 'current account']
-           if user in type :
-               language1 = input("choose language :")
-               language = ['English' , 'German' , 'French']
-               if language1 in language :
-                    print(f"{language1} is accessible , continue")
-                    Pin_no = input("Enter pin no:")
-                    Pin_no = int(Pin_no)
-                    Money = input("enter the amount:")
-                    Money = int(Money)
-                    print("The transaction in processing....")
-                    print("collect your cash")
-                    print(f"The amount of {Money} has been successfully credited" )
+    def log_transaction(self, transaction_string):
+        with open("transactions.txt", "a") as file:
+            file.write(f"{transaction_string} \t\t\tBalance: {self.balance}\n")
 
 
+    def withdrawal(self, amount):
+        try:
+            amount = float(amount)
+        
+        except ValueError:
+            amount = 0
+        if amount:
+            self.balance = self.balance - amount
+            self.log_transaction(f"Withdrew {amount}")
 
+    def deposit(self, amount):
+        try:
+            amount = float(amount)
 
-      
+        except ValueError:
+            amount = 0
+        if amount:
+            self.balance = self.balance + amount
+            self.log_transaction(f"Deposited {amount}")
+        
 
+account = Bank(50.50)
+while True:
+    try:
+        action = input("what kind of action do you want to take? ")
 
-Saving_money = Banking()
-Saving_money.depositor
-Saving_money.transaction
+    except KeyboardInterrupt:
+        print("\nLeaving the ATM\n")
+        break
+    if action in ["withdrawal", "deposit"]:
+        if action == "withdrawal":
+            amount = input("How much do you want to take out? ")
+            account.withdrawal(amount)
+        else:
+            amount = input("How much do you want to put in? ")
+            account.deposit(amount)
+
+        print("Your balance is", account.balance)
+
+    else:
+        print("That is not a valid action. Try again.")
 
 
